@@ -4,7 +4,7 @@ use vars qw($VERSION);
 
 use strict;
 
-$VERSION="0.1.06";
+$VERSION="0.1.07";
 
 =head1 NAME
 
@@ -123,6 +123,62 @@ Constructor for the FormWizard. Returns a reference for a
 HTML::FormWizard object.
 
 =cut
+
+my %validators=(
+	email => sub {
+				my $str=shift;
+				if ($str=~/^[a-zA-Z][\w\.\_\-]*\@[\w\.\-]+\.[a-zA-Z]{2,4}$/) {
+					return 0;
+				} else {
+					return "Invalid Email";
+				}
+			},
+	phone => sub {
+				my $str=shift;
+				if ($str=~
+					/^(\+\d{1,3})? ?([\(-\s])?\d{1,3}?([\s-\)])[\d\s\-]+$/) {
+					return 0;
+				} else {
+					return "This is not a valid phone number";
+				}
+			},
+	ccard => sub {
+				my $str=shift;
+				if ($str =~ /^\d{4}[\- ]?\d{4}[\- ]?\d{4}[\- ]?\d{4}$|^\d{4}[\- ]?\d{6}[\- ]?\d{5}$/) {
+					return 0;
+				} else {
+					return "The credit card number you type is not valid";
+				}
+			},
+	pt_cp => sub {
+				my $str=shift;
+				if ($str=~/^\d{4}(-\d{3})$/ ) {
+					return 0;
+				} else {
+					return "The Postal Code you typed isn't a valid Portuguese Postal Code.";
+				}
+			},
+	us_cp => sub {
+				my $str=shift;
+				if ($str=~/^\d{5}(-\d{4})?$/) {
+					return 0
+				} else {
+					return "The Postal Code you typed is not a US postal code.";
+				}
+			},
+	ipv4 => sub {
+				my $str=shift;
+				my @secs=split /./, $zbr;
+				if (scalar @secs!=4 or $secs[0]<1 or $secs[0]>255
+					or $secs[1]<0 or $secs[1]>255
+					or $secs[2]<0 or $secs[2]>255
+					or $secs[3]<1 or $secs[3]>255)) {
+						return "This is not a value IPv4 value.";
+				} else {
+					return 0;
+				}
+			}
+);
 
 my $error_field;
 my $error_msg;
@@ -302,6 +358,15 @@ sub validate {
 				or ($$field{maxlen} 
 					and length($$data{lc($$field{name})})>$$field{maxlen}));
 		}
+		if (defined($$field{datatype})
+			and defined($validators{$$field{datatype}})
+			and $$data{lc($$field{name})}) {
+			my $zbr=$validators{$$field{datatype}}->($$data{lc($$field{name})});
+			if ($zbr) {
+				$error_msg = $zbr;
+				return 0;
+			}
+		}
 		if (defined($$field{validate})) {
 			my $zbr=$$field{validate}->($$data{lc($$field{name})});
 			if ($zbr) {
@@ -311,6 +376,7 @@ sub validate {
 		}
 	}
 
+	$error_field="";
 	return 1;
 }
 
@@ -1202,6 +1268,26 @@ This property is optional. If not defined, the module will create it with
 ucfirst(name).
 
 Used for the field label.
+
+=head2 validate
+
+This property is optional. If used, it must be a function that receives a
+string or an arrayref, depending on the type of field, and return false or
+an error string to be printed in the form requesting the repost.
+
+=head2 datatype
+
+This property is still experimental, and actually only validates 6 diferent
+kind of values:
+
+	email => validate email address;
+	phone => validate phone numbers;
+	pt_cp => portuguese postal codes;
+	us_cp => american postal codes;
+	ipv4  => IP addresses;
+	ccard => Credit cards.
+
+Others will be implementated as soon as possible.
 
 =head2 Type specific field properties
 

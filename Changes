@@ -1,5 +1,14 @@
 Revision history for Perl extension HTML::FormWizard.
 
+0.1.07 	20020205
+		- Added the datatype property to the fields
+		- Defined standard validations to:
+			- Phone numbers;
+			- Emails;
+			- IPv4 address;
+			- Credit Cards;
+			- Portuguese and American Postal Codes
+
 0.1.06  20020129
 		- Change on documentation (CGI::Apache become CGI)
 		- Some string on 0.1.05 were in Portuguese and are now in English.
