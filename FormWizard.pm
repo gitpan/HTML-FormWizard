@@ -4,7 +4,7 @@ use vars qw($VERSION);
 
 use strict;
 
-$VERSION="0.1.07";
+$VERSION="0.1.08";
 
 =head1 NAME
 
@@ -167,12 +167,12 @@ my %validators=(
 				}
 			},
 	ipv4 => sub {
-				my $str=shift;
+				my $zbr=shift;
 				my @secs=split /./, $zbr;
 				if (scalar @secs!=4 or $secs[0]<1 or $secs[0]>255
 					or $secs[1]<0 or $secs[1]>255
 					or $secs[2]<0 or $secs[2]>255
-					or $secs[3]<1 or $secs[3]>255)) {
+					or $secs[3]<1 or $secs[3]>255) {
 						return "This is not a value IPv4 value.";
 				} else {
 					return 0;
