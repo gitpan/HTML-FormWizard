@@ -1,5 +1,11 @@
 Revision history for Perl extension HTML::FormWizard.
 
+0.1.09	20020212
+		-Minor Bug Fix: Chopped last char in some conditions
+
+0.1.08  20020206
+		-Major Bug Fix: Didn't compile with -w
+
 0.1.07 	20020205
 		- Added the datatype property to the fields
 		- Defined standard validations to:

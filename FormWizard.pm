@@ -4,7 +4,7 @@ use vars qw($VERSION);
 
 use strict;
 
-$VERSION="0.1.08";
+$VERSION="0.1.09";
 
 =head1 NAME
 
@@ -429,7 +429,7 @@ sub getdata {
 				@{$vals} = $self->{cgi}->param($$field{name});
 				if (scalar @{$vals} <= 1) {
 					$$data{lc($$field{name})}=$$vals[0]||"";
-					chop($$data{lc($$field{name})});
+					chomp($$data{lc($$field{name})});
 				} else {
 					$$data{lc($$field{name})}=$vals;
 				}
